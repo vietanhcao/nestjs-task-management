@@ -16,13 +16,14 @@ import { Task, TaskStatus } from './task.module';
 import { TasksService } from './tasks.service';
 import { CreateTaskDto, UpdateTaskDto } from './dto/create-task.dto';
 import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
+import { TaskStatusValidationPipe } from './pipes/task-status-validation.pipes.ts';
 
 @Controller('tasks')
 export class TasksController {
   constructor(private tasksService: TasksService) {}
 
   @Get()
-  getTask(@Query() filterDto: GetTasksFilterDto): Task[] {
+  getTask(@Query(ValidationPipe) filterDto: GetTasksFilterDto): Task[] { /// diffirent use validation
     if(Object.keys(filterDto).length){
       return this.tasksService.getTasksWithFilters(filterDto);
     }
@@ -63,7 +64,7 @@ export class TasksController {
   @HttpCode(200)
   updateTaskStatus(
     @Param('id') id: string,
-    @Body('status') status: TaskStatus,
+    @Body('status', TaskStatusValidationPipe) status: TaskStatus,
   ): Task {
     return this.tasksService.updateTaskStatus(id, status);
   }
