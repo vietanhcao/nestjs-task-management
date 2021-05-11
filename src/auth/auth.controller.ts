@@ -5,6 +5,7 @@ import {
   Req,
   ValidationPipe,
   UseGuards,
+  HttpCode,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
@@ -24,6 +25,7 @@ export class AuthController {
   }
 
   @Post('/signin')
+  @HttpCode(200)
   async signIn(
     @Body(ValidationPipe) authCredentialsDto: AuthCredentialsDto,
   ): Promise<{ accessToken: string }> {

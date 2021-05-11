@@ -21,6 +21,8 @@ import { TaskStatusValidationPipe } from './pipes/task-status-validation.pipes.t
 import { Task } from './task.entity';
 import { TaskStatus } from './task.status.enum';
 import { AuthGuard } from '@nestjs/passport';
+import { User } from 'src/auth/user.entity';
+import { GetUser } from '../auth/get-user.decorator';
 
 @Controller('tasks')
 @UseGuards(AuthGuard())
@@ -30,9 +32,10 @@ export class TasksController {
   @Get()
   getTask(
     @Query(ValidationPipe) filterDto: GetTasksFilterDto,
+    @GetUser() user: User
   ): Promise<Task[]> {
     /// diffirent use validation
-    return this.tasksService.getTasks(filterDto);
+    return this.tasksService.getTasks(filterDto, user);
   }
 
   // // @Get()
@@ -53,10 +56,13 @@ export class TasksController {
   @Post()
   @UsePipes(ValidationPipe)
   @HttpCode(201)
-  createTask(@Body() createTaskDto: CreateTaskDto): Promise<Task> {
+  createTask(
+    @Body() createTaskDto: CreateTaskDto,
+    @GetUser() user: User,
+  ): Promise<Task> {
     // @Body('title') title: string,
     // @Body('description') description: string
-    return this.tasksService.createTask(createTaskDto);
+    return this.tasksService.createTask(createTaskDto, user);
   }
 
   // // @Put()
