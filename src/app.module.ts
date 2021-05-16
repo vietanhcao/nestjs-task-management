@@ -1,9 +1,10 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeOrmConfig } from './config/typeorm.config';
 import { TasksModule } from './tasks/tasks.module';
 import { AuthModule } from './auth/auth.module';
 import { MorganModule, MorganInterceptor } from 'nest-morgan';
+import { LoggerMiddleware } from './common/middleware/logger.middleware';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import * as path from 'path';
 import * as fs from 'fs';
@@ -44,4 +45,12 @@ if (process.env.NODE_ENV === 'production') {
     },
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(LoggerMiddleware)
+      // .forRoutes('auth/*', 'tasks');
+      .forRoutes('*');
+  }
+}
+

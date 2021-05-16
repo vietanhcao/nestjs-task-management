@@ -10,6 +10,7 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { RolesGuard } from 'src/role/roles.guard';
 import { AuthService } from './auth.service';
 import { AuthCredentialsDto } from './dto/auth-credentials.dto';
 import { GetUser } from './get-user.decorator';
@@ -27,6 +28,8 @@ export class AuthController {
   }
 
   @Post('/signin')
+  @UseGuards(new RolesGuard())
+  // @Roles('admin')
   @HttpCode(200)
   async signIn(
     @Body(ValidationPipe) authCredentialsDto: AuthCredentialsDto,
