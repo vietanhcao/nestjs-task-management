@@ -6,7 +6,7 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './jwt.strategy';
 import { UserRepository } from './user.repository';
-import * as config from "config";
+import * as config from 'config';
 
 const jwtConfig: any = config.get('jwt');
 
@@ -29,9 +29,6 @@ const jwtConfig: any = config.get('jwt');
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy],
 
-  exports: [
-    JwtStrategy,
-    PassportModule
-  ]
+  exports: [JwtStrategy, PassportModule],
 })
 export class AuthModule {}
